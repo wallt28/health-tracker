@@ -1,33 +1,95 @@
-from flask import Flask, render_template, request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask import Flask, render_template, request, jsonify, redirect, make_response, url_for, abort, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+
+from sqlalchemy.orm.exc import NoResultFound
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    jwt_required,
+    get_jwt_identity,
+    decode_token
+)
+from forms import LoginForm, RegistrationForm
 from flask_bcrypt import Bcrypt
-import psycopg2
 import plotly.graph_objs as go
 import dotenv
+import jwt
 
 from plotly.subplots import make_subplots
+from models import User, HealthMetric
 
-#? To do next: Create a log output that allows users to delete & update entries easily
+from db import db
+
+
+# ? To do next: Create a log output that allows users to delete & update entries easily
 
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "super-secret" # Change this in production
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this in production
+app.config["SECRET_KEY"] = "your-secret-key-here"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/healthtracker'
+db.init_app(app)
+
+
+with app.app_context():
+    db.create_all()
+
 jwt = JWTManager(app)
 bcrypt = Bcrypt(app)
 
-# PostgreSQL database connection
-conn = psycopg2.connect(
-    host="localhost",
-    database="healthtracker",
-    user="postgres",
-    password="mysecretpassword"
-)
+
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("home.html")
+
+@app.route("/new", methods=["GET"])
+def homenew():
+    return render_template("homenew.html")
+
+@app.route("/workouts", methods=["GET", "POST"])
+def workouts():
+    return render_template("workouts.html")
 
 
+#! ADD LOGIC SO THAT IF USER DATA ISNT THERE,
+#! DISPLAY ON HTML "NO DATA HAS BEEN ADDED, TRY ADDING SOME OR CLICK HERE TO ADD"
 
-# Define index route
-@app.route("/", methods=["GET", "POST"])
-def index():
+# Display the health metric logs for a user
+@app.route('/health_metric_logs/<int:user_id>', methods=["GET", "POST"])
+def health_metric_logs(user_id):
+    # Get the health metric logs for the specified user
+    health_metrics = HealthMetric.query.filter_by(user_id=user_id).all()
+    print(user_id)
+    print(health_metrics)
+
+    return render_template('health_metric_logs.html', health_metrics=health_metrics)
+
+# Delete a health metric log entry
+@app.route('/delete_health_metric/<int:id>', methods=["GET", "POST"])
+def delete_health_metric(id):
+    # Find the health metric log entry with the specified ID
+    health_metric = HealthMetric.query.get(id)
+
+    if health_metric:
+        # Delete the health metric log entry from the database
+        db.session.delete(health_metric)
+        db.session.commit()
+
+    return redirect(url_for('health_metric_logs', user_id=health_metric.user_id))
+
+
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboard():
+    #! Change to JWT / more secure in the future
+    try:
+        access_token = request.cookies.get("access_token")
+        decoded_token = decode_token(access_token)
+
+    except:
+        return jsonify("No access token - functionality to follow - please go to LOGIN.")
+
+    user_id = decoded_token["user_id"]
+
     if request.method == "POST":
         # Get data from form
         date = request.form["date"]
@@ -39,41 +101,39 @@ def index():
         mood = request.form["mood"]
 
         # Check if the date already exists in the data
-        cur = conn.cursor()
-        cur.execute("SELECT date FROM health WHERE date = %s", (date,))
-        result = cur.fetchone()
-
-        if result is not None:
-            # Update existing entry
-            cur.execute("UPDATE health SET calories = %s, protein = %s, carbs = %s, fats = %s, sleep = %s, mood = %s WHERE date = %s", (calories, protein, carbs, fats, sleep, mood, date))
-        else:
+        try:
+            metric = HealthMetric.query.filter_by(date=date, user_id=user_id).one()
+            metric.calories = calories
+            metric.protein = protein
+            metric.carbs = carbs
+            metric.fats = fats
+            metric.sleep = sleep
+            metric.mood = mood
+        except NoResultFound:
             # Add new entry to database
-            cur.execute("INSERT INTO health (date, calories, protein, carbs, fats, sleep, mood) VALUES (%s, %s, %s, %s, %s, %s, %s)", (date, calories, protein, carbs, fats, sleep, mood))
+            metric = HealthMetric(date=date, calories=calories, protein=protein, carbs=carbs, fats=fats, sleep=sleep, mood=mood, user_id=user_id)
+            db.session.add(metric)
 
-        conn.commit()
-        cur.close()
+        db.session.commit()
 
     # Fetch data from database
-    cur = conn.cursor()
-    cur.execute("SELECT date, calories, protein, carbs, fats, sleep, mood FROM health ORDER BY date DESC")
-    rows = cur.fetchall()
-    cur.close()
-
-    # Create list of dictionaries from fetched rows
     data = []
-    for row in rows:
+    for metric in HealthMetric.query.filter_by(user_id=user_id).order_by(HealthMetric.date.desc()):
         data.append({
-            "date": row[0],
-            "calories": row[1],
-            "protein": row[2],
-            "carbs": row[3],
-            "fats": row[4],
-            "sleep": row[5],
-            "mood": row[6]
+            "date": metric.date,
+            "calories": metric.calories,
+            "protein": metric.protein,
+            "carbs": metric.carbs,
+            "fats": metric.fats,
+            "sleep": metric.sleep,
+            "mood": metric.mood,
         })
-
     # Create plotly figure
-    fig = make_subplots(rows=2, cols=3, subplot_titles=("Calories", "Sleep", "Mood", "Fats", "Protein", "Carbs"))
+    fig = make_subplots(
+        rows=2,
+        cols=3,
+        subplot_titles=("Calories", "Sleep", "Mood", "Fats", "Protein", "Carbs"),
+    )
     fig.add_trace(
         go.Scatter(
             x=[d["date"] for d in data],
@@ -128,72 +188,123 @@ def index():
         row=2,
         col=3,
     )
-    fig.update_layout(height=600, title_text="Nutrional Data")
-
+    fig.update_layout(height=600, title_text="Nutrition")
+    #fig2.update_layout(height=600, title_text="Body Composition")
+    #fig3.update_layout(height=600, title_text="Well-being")
+    #fig4.update_layout(height=600, title_text="Physical Activity")
 
     # Convert plotly figure to HTML
-    graph = fig.to_html(full_html=False)
-
-    return render_template("index.html", data=data, graph=graph)
+    graphData = fig.to_html(full_html=False)
 
 
-# Registration endpoint
-@app.route("/register", methods=["POST"])
+    access_token = request.cookies.get("access_token")
+
+
+
+
+
+
+    if access_token:
+        decoded_token = decode_token(access_token)
+        name = decoded_token['name'].title()
+        first_name = (f"{name}'s")
+    else:
+        first_name = "Your"
+
+
+
+
+    # Pass the name to your template
+    return render_template(
+        "dashboard.html", data=data, graph=graphData, first_name=first_name
+    )
+
+
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if not email or not password:
+            return jsonify({"msg": "Missing email or password"}), 400
+
+        # Get user from database
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return jsonify({"msg": "Invalid email or password"}), 401
+
+        # Check password
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({"msg": "Invalid email or password"}), 401
+
+        # Extract id and email from user object
+        user_id, user_email, first_name = user.id, user.email, user.first_name
+
+        # Create JWT access token with email as custom claim
+        access_token = create_access_token(
+            identity=user_id,
+            additional_claims={"email": user_email, "name": first_name, "user_id": user_id},
+        )
+
+        print()
+
+        # Store JWT in a cookie
+        response = make_response(redirect("/dashboard"))
+        response.set_cookie("access_token", access_token)
+
+        return response
+
+    form = LoginForm()
+    return render_template("login.html", form=form)
+
+
+@app.route("/register", methods=["POST", "GET"])
 def register():
-    first_name = request.json.get("first_name", None)
-    last_name = request.json.get("last_name", None)
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    print("test print")
+    if request.method == 'POST':
+        print("test print")
+        first_name = request.form.get("first_name", None)
+        last_name = request.form.get("last_name", None)
+        email = request.form.get("email", None)
+        password = request.form.get("password", None)
+        print(first_name, last_name, email, password)
 
-    if not all([email, password, first_name, last_name]):
-        return jsonify({"msg": "Missing either email, password, first_name, or last_name"}), 400
+        if not all([email, password, first_name, last_name]):
+            return (
+                jsonify(
+                    {"msg": "Missing either email, password, first_name, or last_name"}
+                ),
+                400,
+            )
+
+        # Hash password
+        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        # Insert new user into database
+        new_user = User(email=email, password=hashed_password, first_name=first_name, last_name=last_name)
+
+        try:
+            db.session.add(new_user)
+
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return (jsonify({"msg": "Email already exists."}), 409)
 
 
-    # Hash password
-    hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+        return redirect(url_for('login'))
 
-    # Insert new user into database
-    cur = conn.cursor()
-    cur.execute("INSERT INTO users (email, password, first_name, last_name) VALUES (%s, %s, %s, %s)", (email, hashed_password, first_name, last_name))
-    conn.commit()
+    form = RegistrationForm()
 
-    return jsonify({"msg": "User created successfully"}), 201
+    return render_template('register.html', form=form)
 
 # Login endpoint
-@app.route("/login", methods=["POST"])
-def login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
 
-    if not email or not password:
-        return jsonify({"msg": "Missing email or password"}), 400
 
-    # Get user from database
-    cur = conn.cursor()
-    cur.execute("SELECT id, email, password FROM users WHERE email = %s", (email,))
-    user = cur.fetchone()
 
-    if not user:
-        return jsonify({"msg": "Invalid email or password"}), 401
-
-    # Check password
-    if not bcrypt.check_password_hash(user[2], password):
-        return jsonify({"msg": "Invalid email or password"}), 401
-
-    # Extract id and email from user tuple
-    user_id, user_email = user[0], user[1]
-
-    # Create JWT access token with email as custom claim
-    access_token = create_access_token(identity=user_id, additional_claims={"email": user_email})
-
-    return jsonify({"access_token": access_token}), 200
-
-# Protected endpoint
-@app.route("/protected", methods=["GET"])
-@jwt_required()
-def protected():
-    user_id = get_jwt_identity()
-    return jsonify({"user_id": user_id}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

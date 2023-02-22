@@ -1,0 +1,3 @@
+test:
+	docker ps
+

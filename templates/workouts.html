@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fitness App</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <a class="navbar-brand" href="#">Fitness Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <section class="bg-info bg-white text-dark p-5 p-lg-0 pt-lg-3 text-center">
+        <div class="container text-center pb-3">
+            <div class="d-sm-flex align-items-center justify-content-between">
+                <div class="col">
+                </div>
+                <div class="text-container">
+                    <h1 class="my-5" >Your Workout Journal</h1>
+                </div>
+                <div class="col">
+                </div>
+            </div>
+        </div>
+    </section>
+	<div class="container">
+        <div class="row mt-4">
+            <div class="col-sm-8 offset-sm-2">
+                <h2 class="text-center">Today's Workout</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Exercise</th>
+                            <th>Sets</th>
+                            <th>Reps</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Squats</td>
+                            <td>3</td>
+                            <td>10</td>
+                            <td>100 lbs</td>
+                        </tr>
+                        <tr>
+                            <td>Bench press</td>
+                            <td>3</td>
+                            <td>8</td>
+                            <td>135 lbs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-8 offset-sm-2">
+                <h2 class="text-center">Calendar</h2>
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('#calendar').fullCalendar({
+				events: [
+					{
+						title: 'Squats',
+						start: '2023-02-19',
+						allDay: true
+					},
+					{
+						title: 'Bench press',
+						start: '2023-02-21',
+						allDay: true
+					}
+				]
+			});
+		});
+	</script>
+
+</body>
+</html>

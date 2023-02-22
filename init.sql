@@ -1,3 +1,0 @@
-CREATE DATABASE healthtracker;
-CREATE USER myuser WITH ENCRYPTED PASSWORD 'mypassword';
-GRANT ALL PRIVILEGES ON DATABASE healthtracker TO myuser;

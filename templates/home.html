@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <a class="navbar-brand" href="#">Fitness Tracker</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapsibleNavbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+
+    <div
+      style="height: 100vh; background-image: url('{{ url_for('static', filename='images/hero_img.jpeg') }}'); background-size: cover; background-position: center;"
+      class="position-relative w-100"
+    >
+      <div
+        class="position-absolute text-white d-flex flex-column align-items-start justify-content-center"
+        style="
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-color: rgba(0, 0, 0, 0.7);
+        "
+      >
+        <div class="container">
+          <div class="col-md-6">
+            <span style="color: #bbb" class="text-uppercase">Tom Health</span>
+            <!-- on small screens remove display-4 -->
+            <h1 class="mb-4 mt-2 display-4 font-weight-bold">
+              Be Your <span style="color: #5d8ae5">Best Self</span>
+            </h1>
+            <p style="color: #bbb">
+              Take control of your health and fitness journey. Our platform
+              provides a comprehensive approach to tracking your progress, so
+              you can stay on top of your goals and achieve success.
+            </p>
+            <div class="mt-5">
+              <!-- hover background-color: white; color: black; -->
+              <a
+                href="#"
+                class="btn px-5 py-3 text-white mt-3 mt-sm-0"
+                style="border-radius: 30px; background-color: #5d8ae5"
+                >Get Started</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Hero -->
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container" data-aos="fade-up">
+        <div class="row gy-4">
+          <div
+            class="col-lg-7 position-relative about-img"
+            style="background-image: url('{{ url_for('static', filename='images/about.jpg') }}');"
+            data-aos="fade-up"
+            data-aos-delay="150"
+          >
+            <div class="call-us position-absolute">
+              <h4>Stay on track</h4>
+            </div>
+          </div>
+          <div
+            class="col-lg-5 d-flex align-items-end"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div class="content ps-0 ps-lg-5">
+              <p class="fst-italic">
+                Welcome to Tom Health, the all-in-one health and fitness
+                tracking platform that helps you achieve your goals
+                effortlessly. Easily track your nutrition, sleep, mood, steps,
+                calories, weight, and workouts all in one place. Our platform
+                allows you to see your averages, identify trends, and stay
+                motivated towards your goals. Sign up now to start achieving
+                your health and fitness goals with ease.
+              </p>
+              <ul>
+                <li>
+                  <i class="bi bi-check2-all mb-1"></i> -Easily track your daily
+                  nutrition, sleep, mood, steps, calories, weight, and workouts
+                  all in one place.
+                </li>
+                <li>
+                  <i class="bi bi-check2-all mb-1"></i> -Get valuable insights into
+                  your health and fitness progress with our platform's tracking
+                  features, including the ability to see your averages and
+                  identify trends
+                </li>
+                <li>
+                  <i class="bi bi-check2-all"></i> -Stay motivated and on track
+                  towards your goals with our intuitive and user-friendly
+                  platform
+                </li>
+              </ul>
+
+              <div class="position-relative mt-4">
+                <img
+                  src="{{ url_for('static', filename='images/test.png') }}"
+                  class="img-fluid"
+                  alt=""
+                />
+                <a
+                  href="https://www.linkedin.com/in/tom-w-41083122a/"
+                  class="glightbox play-btn"
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End About Section -->
+
+    <!-- SECTION START-->
+    <div
+      class="py-3 container min-vh-100 d-flex justify-content-center align-items-center"
+    >
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card1 mt-3 p-3 g-2">
+            <div class="d-flex align-items-center"></div>
+            <div class="mt-3">
+              <br />
+              <h2 class="text1">A Healthier You</h2>
+            </div>
+            <div class="detail mt-5">
+              <p
+                >Studies have shown that tracking health and fitness metrics can
+                increase physical activity levels by up to 27%, leading to
+                improved overall health and wellbeing.</p>
+
+            </div>
+            <div class="mt-3 d-flex justify-content-end px-2">
+              <button class="btn-submit">Find Out More</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card2 mt-3 p-3 g-2">
+            <div class="d-flex align-items-center"></div>
+            <div class="mt-3">
+              <br />
+              <h2 class="text2">Did you know?</h2>
+            </div>
+            <div class="detail mt-5">
+              <div class="px-1">
+                <p>
+                  Tracking your sleep with wearables to identify patterns and
+                  improve sleep quality and duration, leading to better health -
+                  Journal of Sports Science and Medicine.
+                </p>
+              </div>
+            </div>
+            <div class="mt-3 d-flex justify-content-end px-2">
+              <button class="btn-submit1">Find Out More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= Why Us Section ======= -->
+    <section id="why-us" class="why-us section-bg">
+      <div class="container" data-aos="fade-up">
+        <div class="row gy-4">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="why-box">
+              <h3>Why Choose Tom's Health</h3>
+              <p>
+                Our fitness/health metric tracking website offers personalized
+                tracking of weight, steps, nutrition, sleep, mood and workouts.
+                We provide customized recommendations to help achieve your
+                goals. User-friendly and accessible, choose us for a tailored,
+                holistic approach to health and fitness.
+              </p>
+              <div class="text-center">
+                <a href="{{ url_for('login') }}" class="more-btn"
+                  >Sign Up Now <i class="bx bx-chevron-right"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <!-- End Why Box -->
+
+          <div class="col-lg-8 d-flex align-items-center">
+            <div class="row gy-4">
+              <div class="col-xl-4" data-aos="fade-up" data-aos-delay="200">
+                <div
+                  class="icon-box d-flex flex-column justify-content-center align-items-center"
+                >
+                  <i class="bi bi-clipboard-data"></i>
+                  <h4>Effortlessly Track Your Fitness Progress</h4>
+                  <p>
+                    With our workout tracking feature, you can log all your gym
+                    sessions and monitor your progress towards your fitness
+                    goals with ease.
+                  </p>
+                </div>
+              </div>
+              <!-- End Icon Box -->
+
+              <div class="col-xl-4" data-aos="fade-up" data-aos-delay="300">
+                <div
+                  class="icon-box d-flex flex-column justify-content-center align-items-center"
+                >
+                  <i class="bi bi-gem"></i>
+                  <h4>Personalized Recommendations for Optimal Health</h4>
+                  <p>
+                    Our platform analyzes your data and provides customized
+                    recommendations to help you optimize your health and fitness
+                    journey.
+                  </p>
+                </div>
+              </div>
+              <!-- End Icon Box -->
+
+              <div class="col-xl-4" data-aos="fade-up" data-aos-delay="400">
+                <div
+                  class="icon-box d-flex flex-column justify-content-center align-items-center"
+                >
+                  <i class="bi bi-heart"></i>
+                  <h4>Simplify Your Health Journey</h4>
+                  <p>
+                    Our website provides a centralized location for tracking
+                    your weight, steps, nutrition, sleep, mood, and workouts,
+                    making it easy to stay motivated and on track.
+                  </p>
+                </div>
+              </div>
+              <!-- End Icon Box -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Why Us Section -->
+
+    <!-- SECTION START-->
+    <div data-aos="fade-up" data-aos-duration="1000" class="mb-5 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4">
+            <h3></h3>
+            <p></p>
+          </div>
+
+          <div class="col-sm-4">
+            <h3></h3>
+            <p></p>
+          </div>
+          <div class="col-sm-4">
+            <h3></h3>
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid bg-dark text-white text-center py-3">
+      <p>&copy; 2023 Fitness Tracker. All rights reserved.</p>
+    </div>
+
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
