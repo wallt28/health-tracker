@@ -71,7 +71,7 @@
               <div class="card h-100">
                 <div class="card-body">
                   <h3 class="card-title">Sleep</h3>
-                  <p class="card-text">Average sleep duration: <!--{{ total_sleep }} hours --></p>
+                  <p class="card-text">Average sleep duration: {{ avg_metrics.sleep }} hours p/n</p>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@
               <div class="card h-100">
                 <div class="card-body">
                   <h3 class="card-title">Mood</h3>
-                  <p class="card-text">Average mood:<!-- {{ avg_mood }}/10 --></p>
+                  <p class="card-text">Average mood: {{ avg_metrics.mood }}/10</p>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
               <div class="card h-100">
                 <div class="card-body">
                   <h3 class="card-title">Fats</h3>
-                  <p class="card-text">Total fats: <!--{{ total_fats }} --></p>
+                  <p class="card-text">Average daily fats: {{ avg_metrics.fats }}g</p>
                 </div>
               </div>
             </div>
@@ -97,7 +97,7 @@
               <div class="card h-100">
                 <div class="card-body">
                   <h3 class="card-title">Protein</h3>
-                  <p class="card-text">Total protein:<!-- {{ total_protein }} --></p>
+                  <p class="card-text">Average daily protein: {{ avg_metrics.protein }}g</p>
                 </div>
               </div>
             </div>
@@ -105,7 +105,7 @@
               <div class="card h-100">
                 <div class="card-body">
                   <h3 class="card-title">Carbohydrates</h3>
-                  <p class="card-text">Total carbohydrates:<!-- {{ total_carbs }} --></p>
+                  <p class="card-text">Average daily carbs: {{ avg_metrics.carbs }}g</p>
                 </div>
               </div>
             </div>

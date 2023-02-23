@@ -5,9 +5,9 @@ import random
 # Postgres database connection details
 dbname = 'healthtracker'
 user = 'postgres'
-password = 'mysecretpassword'
-host = 'localhost'
-port = '5432'
+password = 'mypassword'
+host = 'db'
+port = '5000'
 
 # Connect to Postgres database
 conn = psycopg2.connect(

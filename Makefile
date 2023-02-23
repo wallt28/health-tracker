@@ -1,3 +1,3 @@
-test:
+tom:
 	docker ps
 

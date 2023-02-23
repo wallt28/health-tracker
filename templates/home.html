@@ -14,6 +14,10 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <link
       rel="stylesheet"
@@ -24,10 +28,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap"
     />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0-beta2/css/all.css" integrity="sha384-gRmZM8W46GKwYrLqOtTLoTzX8IO9vV+LJ+ZnGGnZg/8W+hMNnZvLl+Ru/1A2X/DW" crossorigin="anonymous">
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/styles.css') }}"
     />
+
+</head>
   </head>
   <body>
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -102,58 +110,54 @@
     <section id="about" class="about">
       <div class="container" data-aos="fade-up">
         <div class="row gy-4">
-          <div
-            class="col-lg-7 position-relative about-img"
-            style="background-image: url('{{ url_for('static', filename='images/about.jpg') }}');"
-            data-aos="fade-up"
-            data-aos-delay="150"
-          >
+            <div class="col-lg-7 position-relative about-img" style="background-image: url('{{ url_for('static', filename='images/gym-2.jpeg') }}'); background-size: contain; width: 100%; max-width: 600px;" data-aos="fade-up" data-aos-delay="150">
             <div class="call-us position-absolute">
               <h4>Stay on track</h4>
             </div>
           </div>
           <div
-            class="col-lg-5 d-flex align-items-end"
+            class="col-lg-5 d-flex align-items-center justify-content-center"
             data-aos="fade-up"
             data-aos-delay="300"
           >
-            <div class="content ps-0 ps-lg-5">
-              <p class="fst-italic">
-                Welcome to Tom Health, the all-in-one health and fitness
-                tracking platform that helps you achieve your goals
-                effortlessly. Easily track your nutrition, sleep, mood, steps,
-                calories, weight, and workouts all in one place. Our platform
-                allows you to see your averages, identify trends, and stay
-                motivated towards your goals. Sign up now to start achieving
-                your health and fitness goals with ease.
+            <div class="content ps-0 ps-lg-5 text-center">
+              <p class="lead">
+                Tom Health is your all-in-one health and fitness platform, where
+                you can easily track your nutrition, sleep, mood, steps,
+                calories, weight, and workouts. This platform provides valuable
+                insights into your progress, with averages and trends to keep
+                you motivated and on track.
               </p>
-              <ul>
+              <ul
+                class="list-unstyled"
+                style="list-style: none; padding-left: 0"
+              >
                 <li>
-                  <i class="bi bi-check2-all mb-1"></i> -Easily track your daily
+                  <i class="bi bi-check2-all me-2"></i>Easily track your daily
                   nutrition, sleep, mood, steps, calories, weight, and workouts
                   all in one place.
                 </li>
                 <li>
-                  <i class="bi bi-check2-all mb-1"></i> -Get valuable insights into
-                  your health and fitness progress with our platform's tracking
-                  features, including the ability to see your averages and
-                  identify trends
+                  <i class="bi bi-check2-all me-2"></i>Get valuable insights
+                  into your health and fitness progress with our platform's
+                  tracking features, including the ability to see your averages
+                  and identify trends.
                 </li>
                 <li>
-                  <i class="bi bi-check2-all"></i> -Stay motivated and on track
-                  towards your goals with our intuitive and user-friendly
-                  platform
+                  <i class="bi bi-check2-all me-2"></i>Stay motivated and on
+                  track towards your goals with our intuitive and user-friendly
+                  platform.
                 </li>
               </ul>
-
               <div class="position-relative mt-4">
                 <img
                   src="{{ url_for('static', filename='images/test.png') }}"
                   class="img-fluid"
                   alt=""
+                  style="transition: transform 0.5s"
                 />
                 <a
-                  href="https://www.linkedin.com/in/tom-w-41083122a/"
+                  href="www.linkedin.com/in/tomwallis28"
                   class="glightbox play-btn"
                 ></a>
               </div>
@@ -162,6 +166,7 @@
         </div>
       </div>
     </section>
+
     <!-- End About Section -->
 
     <!-- SECTION START-->
@@ -177,11 +182,11 @@
               <h2 class="text1">A Healthier You</h2>
             </div>
             <div class="detail mt-5">
-              <p
-                >Studies have shown that tracking health and fitness metrics can
+              <p>
+                Studies have shown that tracking health and fitness metrics can
                 increase physical activity levels by up to 27%, leading to
-                improved overall health and wellbeing.</p>
-
+                improved overall health and wellbeing.
+              </p>
             </div>
             <div class="mt-3 d-flex justify-content-end px-2">
               <button class="btn-submit">Find Out More</button>
@@ -236,13 +241,14 @@
           </div>
           <!-- End Why Box -->
 
+
           <div class="col-lg-8 d-flex align-items-center">
             <div class="row gy-4">
               <div class="col-xl-4" data-aos="fade-up" data-aos-delay="200">
                 <div
                   class="icon-box d-flex flex-column justify-content-center align-items-center"
                 >
-                  <i class="bi bi-clipboard-data"></i>
+                <i class="fa-solid fa-dumbbell"></i>
                   <h4>Effortlessly Track Your Fitness Progress</h4>
                   <p>
                     With our workout tracking feature, you can log all your gym
@@ -257,7 +263,7 @@
                 <div
                   class="icon-box d-flex flex-column justify-content-center align-items-center"
                 >
-                  <i class="bi bi-gem"></i>
+                <i class="fa-solid fa-heart"></i>
                   <h4>Personalized Recommendations for Optimal Health</h4>
                   <p>
                     Our platform analyzes your data and provides customized
@@ -272,7 +278,7 @@
                 <div
                   class="icon-box d-flex flex-column justify-content-center align-items-center"
                 >
-                  <i class="bi bi-heart"></i>
+                <i class="fa-solid fa-weight-scale"></i>
                   <h4>Simplify Your Health Journey</h4>
                   <p>
                     Our website provides a centralized location for tracking
@@ -289,30 +295,48 @@
     </section>
     <!-- End Why Us Section -->
 
-    <!-- SECTION START-->
-    <div data-aos="fade-up" data-aos-duration="1000" class="mb-5 mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-4">
-            <h3></h3>
-            <p></p>
-          </div>
 
-          <div class="col-sm-4">
-            <h3></h3>
-            <p></p>
+    <!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+
+    </section>
+    <section class="">
+            <div>
+              <a href="www.linkedin.com/in/tomwallis28" class="me-4 text-reset">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="https://github.com/wallt28" class="me-4 text-reset">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+        <div class="container text-center text-md-start mt-5">
+          <!-- Technologies Used row -->
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <h6 class="text-uppercase fw-bold">
+                Technologies Used
+              </h6>
+            </div>
           </div>
-          <div class="col-sm-4">
-            <h3></h3>
-            <p></p>
+          <!-- Technologies List row -->
+          <div class="row">
+            <div class="col-md-12">
+              <p>
+                <a href="#!" class="text-reset me-6">Python/Flask</a>
+                <a href="#!" class="text-reset me-6">Docker</a>
+                <a href="#!" class="text-reset me-6">Bootstrap</a>
+                <a href="#!" class="text-reset me-6">Javascript</a>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div class="container-fluid bg-dark text-white text-center py-3">
-      <p>&copy; 2023 Fitness Tracker. All rights reserved.</p>
-    </div>
+
+
+    <!-- Section: Links  -->
+  </footer>
+
 
     <script>
       AOS.init();

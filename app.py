@@ -27,7 +27,7 @@ from db import db
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this in production
 app.config["SECRET_KEY"] = "your-secret-key-here"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/healthtracker'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mypassword@db/healthtracker'
 db.init_app(app)
 
 
@@ -42,9 +42,11 @@ bcrypt = Bcrypt(app)
 def home():
     return render_template("home.html")
 
-@app.route("/new", methods=["GET"])
-def homenew():
-    return render_template("homenew.html")
+@app.route("/home2", methods=["GET"])
+def home2():
+    return render_template("home_2.html")
+
+
 
 @app.route("/workouts", methods=["GET", "POST"])
 def workouts():
@@ -128,6 +130,35 @@ def dashboard():
             "sleep": metric.sleep,
             "mood": metric.mood,
         })
+
+    # Calculate averages
+    num_metrics = len(data)
+    if num_metrics > 0:
+        avg_calories = sum(metric["calories"] for metric in data) / num_metrics
+        avg_protein = sum(metric["protein"] for metric in data) / num_metrics
+        avg_carbs = sum(metric["carbs"] for metric in data) / num_metrics
+        avg_fats = sum(metric["fats"] for metric in data) / num_metrics
+        avg_sleep = sum(metric["sleep"] for metric in data) / num_metrics
+        total_mood = sum(int(metric["mood"]) for metric in data)
+        avg_mood = total_mood / num_metrics
+    else:
+        avg_calories = 0
+        avg_protein = 0
+        avg_carbs = 0
+        avg_fats = 0
+        avg_sleep = 0
+        avg_mood = 0
+
+    avg_metrics = {
+        "calories": round(avg_calories),
+        "protein": round(avg_protein),
+        "carbs": round(avg_carbs),
+        "fats": round(avg_fats),
+        "sleep": round(avg_sleep),
+        "mood": round(avg_mood),
+    }
+
+
     # Create plotly figure
     fig = make_subplots(
         rows=2,
@@ -211,13 +242,7 @@ def dashboard():
     else:
         first_name = "Your"
 
-
-
-
-    # Pass the name to your template
-    return render_template(
-        "dashboard.html", data=data, graph=graphData, first_name=first_name
-    )
+    return render_template("dashboard.html", data=data, avg_metrics=avg_metrics, graph=graphData, first_name=first_name)
 
 
 @app.route("/login", methods=["POST", "GET"])
